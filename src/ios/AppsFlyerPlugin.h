@@ -5,4 +5,5 @@
 - (void)notifyAppID:(CDVInvokedUrlCommand*)command;
 - (void)setCurrencyId:(CDVInvokedUrlCommand*)command;
 - (void)setCustomeUserId:(CDVInvokedUrlCommand*)command;
+- (void)getDeviceId:(CDVInvokedUrlCommand*)command;
 @end

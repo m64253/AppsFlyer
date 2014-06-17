@@ -67,10 +67,19 @@
     //#endif
 }
 
+- (void)getDeviceId:(CDVInvokedUrlCommand*)command
+{
 
-
-
-
-
+    CDVPluginResult* pluginResult = nil;
+    NSString* deviceId = [[AppsFlyerTracker sharedTracker] getAppsFlyerUID];
+    
+    if (deviceId != nil && [deviceId length] > 0) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:deviceId];
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
 
 @end
