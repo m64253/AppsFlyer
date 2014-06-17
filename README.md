@@ -16,7 +16,7 @@ The supported methods are:
 
 for appInstall please use
 
-```
+```javascript
 window.plugins.appsFlyer.notifyAppID(appId, devKey);
 ```
 
