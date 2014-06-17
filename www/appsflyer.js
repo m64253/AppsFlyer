@@ -27,6 +27,13 @@
     	cordova.exec(null, null, "AppsFlyerPlugin", "setCustomeUserId", [options.customeUserId]);
 	};
 	
+	AppsFlyer.prototype.getDeviceId = function (callback) {
+		cordova.exec(function (deviceId) {
+			callback(null, deviceId);
+		}, function (err) {
+			callback(err || new Error ('Unable to get deviceId'));
+		}, "AppsFlyerPlugin", "getDeviceId", []);
+	};
 
 	global.cordova.addConstructor(function() {
 		if (!global.Cordova) {
