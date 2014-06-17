@@ -16,11 +16,15 @@ The supported methods are:
 
 for appInstall please use
 
-	window.plugins.appsFlyer.notifyAppID(appId, devKey);
+```
+window.plugins.appsFlyer.notifyAppID(appId, devKey);
+```
 
 for in app events please use
 
-	window.plugins.appsFlyer.notifyAppID(appId, devKey, eventName, eventValue);
+```javascript
+window.plugins.appsFlyer.notifyAppID(appId, devKey, eventName, eventValue);
+```
 		
 - appId: (String)(Required) App ID provided from AppsFlyer
 
@@ -30,11 +34,20 @@ for in app events please use
 
 - eventValue: (String)(Optional) The event sales value
 
-		window.plugins.appsFlyer.setCurrencyId(currencyId);
+```javascript
+window.plugins.appsFlyer.setCurrencyId(currencyId);
+```
+	
 - currencyId: (String)(Required) Currency Code (USD is default, GBP, EUR)		
-		
-		window.plugins.appsFlyer.setCustomeUserId(customeUserId);
+
+```javascript
+window.plugins.appsFlyer.setCustomeUserId(customeUserId);
+```
+
 - customeUserId: (String)(Required) the custome user id you would like to attach to each conversion
 
-    window.plugins.appsFlyer.getDeviceId(callback);
+```javascript
+window.plugins.appsFlyer.getDeviceId(callback);
+```
+	
 - callback: (Function)(Required)
