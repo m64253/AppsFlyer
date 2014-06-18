@@ -24,11 +24,18 @@
 	};
 
 	AppsFlyer.prototype.notifyAppID = function (appId, devKey, callback) {
-		this._cordovaExec(callback, "notifyAppID", [ appId, devKey ], false);
+		var self = this;
+		this._cordovaExec(function (err, value) {
+			if (!err) {
+				self.appId = appId;
+				self.devKey = devKey;
+			}
+			callback(err, value);
+		}, "notifyAppID", [ appId, devKey ], false);
 	};
 
 	AppsFlyer.prototype.event = function (eventName, eventValue, callback) {
-		this._cordovaExec(callback, "notifyAppID", [ this.appId, this.devKey, this.appId, this.devKey ], true);
+		this._cordovaExec(callback, "notifyAppID", [ this.appId, this.devKey, eventName, eventValue ], true);
 	};
 
 	AppsFlyer.prototype.setCurrencyId = function (currencyId, callback) {
