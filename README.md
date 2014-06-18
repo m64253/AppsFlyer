@@ -42,7 +42,7 @@ window.plugins.appsFlyer.setCurrencyId(currencyId, callback);
 window.plugins.appsFlyer.setCustomeUserId(customeUserId, callback);
 ```
 - customeUserId: (String)(Required) the custome user id you would like to attach to each conversion
-- - callback: (Function)(Required)
+- callback: (Function)(Required)
 
 ```javascript
 window.plugins.appsFlyer.getDeviceId(callback);
