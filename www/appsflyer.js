@@ -5,7 +5,7 @@
 	};
 
 	AppsFlyer.prototype.hasBeenNotified = function () {
-		return this.appId && this.devKey)
+		return this.appId && this.devKey;
 	};
 
 	AppsFlyer.prototype.notifyAppID = function (appId, devKey) {
