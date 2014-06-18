@@ -1,76 +1,61 @@
 (function (global) {
-	var AppsFlyer;
-	AppsFlyer = function () {
+	var AppsFlyer = function () {};
 
+	AppsFlyer.prototype._cordovaExec = function (callback, method, args, hasBeenNotified) {
+		callback = callback || function () {};
+
+		if (this.hasBeenNotified() === hasBeenNotified) {
+			callback(new Error(hasBeenNotified ? (
+					method + ' can not be called twice' 
+				) : ( 
+					'notifyAppID must have been called before ' + method
+			)));
+		} else {
+			cordova.exec(function (value) {
+				callback(null, value);
+			}, function (err) {
+				callback(err || new Error ('Failed ' + method));
+			}, "AppsFlyerPlugin", method, args || []);
+		}
 	};
 
 	AppsFlyer.prototype.hasBeenNotified = function () {
 		return this.appId && this.devKey;
 	};
 
-	AppsFlyer.prototype.notifyAppID = function (appId, devKey) {
-		this.appId = appId;
-		this.devKey = devKey;
-    cordova.exec(null, null, "AppsFlyerPlugin", "notifyAppID", [ appId, devKey ]);
+	AppsFlyer.prototype.notifyAppID = function (appId, devKey, callback) {
+		this._cordovaExec(callback, "notifyAppID", [ appId, devKey ], false);
 	};
 
-	AppsFlyer.prototype.event = function (eventName, eventValue) {
-		if (this.hasBeenNotified) {
-			cordova.exec(null, null, "AppsFlyerPlugin", "notifyAppID", [ this.appId, this.devKey, eventName, eventValue ]);
-		} else {
-			throw new Error('event requries that notifyAppID has been run');
-		}
+	AppsFlyer.prototype.event = function (eventName, eventValue, callback) {
+		this._cordovaExec(callback, "notifyAppID", [ this.appId, this.devKey, this.appId, this.devKey ], true);
 	};
-	
-	AppsFlyer.prototype.setCurrencyId = function (currencyId) {
-		if (this.hasBeenNotified) {
-			cordova.exec(null, null, "AppsFlyerPlugin", "setCurrencyId", [ currencyId ]);
-		} else {
-			throw new Error('setCurrencyId requries that notifyAppID has been run');
-		}
+
+	AppsFlyer.prototype.setCurrencyId = function (currencyId, callback) {
+		this._cordovaExec(callback, "setCurrencyId", [ currencyId ], true);
 	};
-	
-	AppsFlyer.prototype.setCustomeUserId = function (customeUserId) {
-		if (this.hasBeenNotified) {
-			cordova.exec(null, null, "AppsFlyerPlugin", "setCustomeUserId", [ customeUserId ]);
-		} else {
-			throw new Error('setCustomeUserId requries that notifyAppID has been run');
-		}
+
+	AppsFlyer.prototype.setCustomerUserId = function (customerUserId, callback) {
+		this._cordovaExec(callback, "setCustomerUserId", [ customerUserId ], true);
 	};
-	
+
 	AppsFlyer.prototype.getDeviceId = function (callback) {
-		if (this.hasBeenNotified) {
-			cordova.exec(function (deviceId) {
-				callback(null, deviceId);
-			}, function (err) {
-				callback(err || new Error ('Unable to get deviceId'));
-			}, "AppsFlyerPlugin", "getDeviceId", []);
-		} else {
-			throw new Error('getDeviceId requries that notifyAppID has been run');
-		}
+		this._cordovaExec(callback, "getDeviceId", [], true);
 	};
 
-  AppsFlyer.prototype.getConversionData = function (callback) {
-  	if (this.hasBeenNotified) {
-			cordova.exec(function (conversionData) {
-				callback(null, conversionData);
-			}, function (err) {
-				callback(err || new Error ('Unable to get Conversion Data'));
-			}, "AppsFlyerPlugin", "getConversionData", []);
-		} else {
-			throw new Error('getConversionData requries that notifyAppID has been run');
-		}
+	AppsFlyer.prototype.getConversionData = function (callback) {
+		this._cordovaExec(callback, "getConversionData", [], true);
 	};
 
 	global.cordova.addConstructor(function() {
 		if (!global.Cordova) {
 			global.Cordova = global.cordova;
-		};
-
+		}
+		
 		if (!global.plugins) {
 			global.plugins = {};
 		}
-
+		
 		global.plugins.appsFlyer = new AppsFlyer();
 	});
 }(window));

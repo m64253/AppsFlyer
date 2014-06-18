@@ -11,63 +11,76 @@
 
 - (void)notifyAppID:(CDVInvokedUrlCommand*)command
 {
-    if ([command.arguments count] < 2) {
-        return;
+    CDVPluginResult* pluginResult = nil;
+
+    if ([command.arguments count] >= 2) {
+        NSString* appId = [command.arguments objectAtIndex:0];
+        NSString* devKey = [command.arguments objectAtIndex:1];
+        NSString* eventName = [command.arguments objectAtIndex:2];
+        
+        [AppsFlyerTracker sharedTracker].appleAppID = appId;
+        [AppsFlyerTracker sharedTracker].appsFlyerDevKey = devKey;
+        
+        //#ifdef CONFIGURATION_Release
+        if ([command.arguments count] == 2 || [eventName isEqual:[NSNull null]]) {
+            [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+            [[AppsFlyerTracker sharedTracker] loadConversionDataWithDelegate:self];
+            
+        } else if ([command.arguments count] == 3) {
+            [[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:nil];
+            
+        } else if ([command.arguments count] == 4) {
+            [[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:[command.arguments objectAtIndex:3]];
+        }
+        //#endif
+
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
 
-    NSString* appId = [command.arguments objectAtIndex:0];
-    NSString* devKey = [command.arguments objectAtIndex:1];
-    NSString* eventName = [command.arguments objectAtIndex:2];
-    
-   [AppsFlyerTracker sharedTracker].appleAppID = appId;
-
-   [AppsFlyerTracker sharedTracker].appsFlyerDevKey = devKey;
-    
-    //#ifdef CONFIGURATION_Release
-    if ([command.arguments count] == 2 || [eventName isEqual:[NSNull null]]) {
-        [[AppsFlyerTracker sharedTracker] trackAppLaunch];
-        [[AppsFlyerTracker sharedTracker] loadConversionDataWithDelegate:self];
-        
-    } else if ([command.arguments count] == 3) {
-        [[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:nil];
-        
-    } else if ([command.arguments count] == 4) {
-        [[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:[command.arguments objectAtIndex:3]];
-    }
-    //#endif
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
 
 - (void)setCurrencyId:(CDVInvokedUrlCommand*)command
 {
-    if ([command.arguments count] == 0) {
-        return;
+    CDVPluginResult* pluginResult = nil;
+
+    if ([command.arguments count] == 1) {
+        NSString* currencyId = [command.arguments objectAtIndex:0];
+
+        //#ifdef CONFIGURATION_Release
+        [AppsFlyerTracker sharedTracker].currencyCode = currencyId; 
+        //#endif
+
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
     
-    NSString* currencyId = [command.arguments objectAtIndex:0];
-
-    //#ifdef CONFIGURATION_Release
-    
-    [AppsFlyerTracker sharedTracker].currencyCode = currencyId; 
-    
-    //#endif
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
-- (void)setCustomeUserId:(CDVInvokedUrlCommand*)command
+- (void)setCustomerUserId:(CDVInvokedUrlCommand*)command
 {
-    if ([command.arguments count] == 0) {
-        return;
+    CDVPluginResult* pluginResult = nil;
+
+    if ([command.arguments count] == 1) {
+        NSString* customerId = [command.arguments objectAtIndex:0];
+
+        //#ifdef CONFIGURATION_Release
+        [AppsFlyerTracker sharedTracker].customerUserID = customerId;
+        //#endif
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
     
-    NSString* customeId = [command.arguments objectAtIndex:0];
-
-    //#ifdef CONFIGURATION_Release
-    
-    [AppsFlyerTracker sharedTracker].customerUserID = customeId;
-    
-    //#endif
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)getDeviceId:(CDVInvokedUrlCommand*)command

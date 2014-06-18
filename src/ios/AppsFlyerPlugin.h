@@ -9,7 +9,7 @@
 
 - (void)notifyAppID:(CDVInvokedUrlCommand*)command;
 - (void)setCurrencyId:(CDVInvokedUrlCommand*)command;
-- (void)setCustomeUserId:(CDVInvokedUrlCommand*)command;
+- (void)setCustomerUserId:(CDVInvokedUrlCommand*)command;
 - (void)getDeviceId:(CDVInvokedUrlCommand*)command;
 - (void)getConversionData:(CDVInvokedUrlCommand*)command;
 @end
