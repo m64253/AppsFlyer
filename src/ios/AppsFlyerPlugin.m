@@ -5,15 +5,15 @@
 
 - (CDVPlugin *)initWithWebView:(UIWebView *)theWebView
 {
-	self = (AppsFlyerPlugin *)[super initWithWebView:theWebView];
-	return self;
+    self = (AppsFlyerPlugin *)[super initWithWebView:theWebView];
+    return self;
 }
 
 - (void)notifyAppID:(CDVInvokedUrlCommand*)command
 {
     if ([command.arguments count] < 2) {
-		return;
-	}
+        return;
+    }
 
     NSString* appId = [command.arguments objectAtIndex:0];
     NSString* devKey = [command.arguments objectAtIndex:1];
@@ -25,11 +25,14 @@
     
     //#ifdef CONFIGURATION_Release
     if ([command.arguments count] == 2 || [eventName isEqual:[NSNull null]]) {
-    	[[AppsFlyerTracker sharedTracker] trackAppLaunch];
+        [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+        [[AppsFlyerTracker sharedTracker] loadConversionDataWithDelegate:self];
+        
     } else if ([command.arguments count] == 3) {
-    	[[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:nil];
+        [[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:nil];
+        
     } else if ([command.arguments count] == 4) {
-    	[[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:[command.arguments objectAtIndex:3]];
+        [[AppsFlyerTracker sharedTracker] trackEvent:[command.arguments objectAtIndex:2] withValue:[command.arguments objectAtIndex:3]];
     }
     //#endif
 }
@@ -39,8 +42,8 @@
 - (void)setCurrencyId:(CDVInvokedUrlCommand*)command
 {
     if ([command.arguments count] == 0) {
-		return;
-	}
+        return;
+    }
     
     NSString* currencyId = [command.arguments objectAtIndex:0];
 
@@ -55,14 +58,14 @@
 - (void)setCustomeUserId:(CDVInvokedUrlCommand*)command
 {
     if ([command.arguments count] == 0) {
-		return;
-	}
+        return;
+    }
     
     NSString* customeId = [command.arguments objectAtIndex:0];
 
     //#ifdef CONFIGURATION_Release
     
-	[AppsFlyerTracker sharedTracker].customerUserID = customeId;
+    [AppsFlyerTracker sharedTracker].customerUserID = customeId;
     
     //#endif
 }
@@ -75,6 +78,7 @@
     
     if (deviceId != nil && [deviceId length] > 0) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:deviceId];
+        
     } else {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
@@ -82,4 +86,32 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)getConversionData:(CDVInvokedUrlCommand*)command
+{
+
+    CDVPluginResult* pluginResult = nil;
+    
+    if (self.conversionData != nil) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:self.conversionData];
+        
+    } else if (self.conversionDataError) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[self.conversionDataError localizedDescription]];
+        
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+#pragma AppsFlyerTrackerDelegate methods
+- (void) onConversionDataReceived:(NSDictionary*) installData
+{
+    self.conversionData = installData;
+}
+
+- (void) onConversionDataRequestFailure:(NSError *)error
+{
+    self.conversionDataError = error;
+}
 @end
