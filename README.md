@@ -7,7 +7,7 @@ Built against Phonegap 3.3.0.
 ## Installation
 
 ```
-cordova plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-device.git
+cordova plugin add https://github.com/m64253/AppsFlyer.git
 ```
         
 ## API
