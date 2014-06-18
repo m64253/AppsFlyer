@@ -21,28 +21,28 @@ window.plugins.appsFlyer.notifyAppID(appId, devKey, callback);
 ```
 - appId: (String)(Required) App ID provided from AppsFlyer
 - devKey: (String)(Required) Dev key provided from AppsFlyer 
-- callback: (Function)(Required)
+- callback: (Function)
 
 for in app events please use
 
 ```javascript
 window.plugins.appsFlyer.event(eventName, eventValue, callback);
 ```
-- eventName: (String)(Optional) The event name to define the event
+- eventName: (String)(Required) The event name to define the event
 - eventValue: (String)(Optional) The event sales value
-- callback: (Function)(Required)
+- callback: (Function)
 
 ```javascript
 window.plugins.appsFlyer.setCurrencyId(currencyId, callback);
 ```
 - currencyId: (String)(Required) Currency Code (USD is default, GBP, EUR)
-- callback: (Function)(Required)
+- callback: (Function)
 
 ```javascript
 window.plugins.appsFlyer.setCustomeUserId(customeUserId, callback);
 ```
 - customeUserId: (String)(Required) the custome user id you would like to attach to each conversion
-- callback: (Function)(Required)
+- callback: (Function)
 
 ```javascript
 window.plugins.appsFlyer.getDeviceId(callback);
