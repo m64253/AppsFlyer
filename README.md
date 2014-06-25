@@ -17,30 +17,39 @@ The supported methods are:
 for appInstall please use
 
 ```javascript
-window.plugins.appsFlyer.notifyAppID(appId, devKey);
+window.plugins.appsFlyer.notifyAppID(appId, devKey, callback);
 ```
+- ``appId`` **String** _(Required)_ App ID provided from AppsFlyer
+- ``devKey`` **String** _(Required)_ Dev key provided from AppsFlyer 
+- ``callback`` **Function** _(Optional)_
 
 for in app events please use
 
 ```javascript
-window.plugins.appsFlyer.notifyAppID(appId, devKey, eventName, eventValue);
+window.plugins.appsFlyer.event(eventName, eventValue, callback);
 ```
-- appId: (String)(Required) App ID provided from AppsFlyer
-- devKey: (String)(Required) Dev key provided from AppsFlyer 
-- eventName: (String)(Optional) The event name to define the event
-- eventValue: (String)(Optional) The event sales value
+- ``eventName`` **String** _(Required)_ The event name to define the event
+- ``eventValue`` **String** _(Optional)_ The event sales value
+- ``callback`` **Function** _(Optional)_
 
 ```javascript
-window.plugins.appsFlyer.setCurrencyId(currencyId);
+window.plugins.appsFlyer.setCurrencyId(currencyId, callback);
 ```
-- currencyId: (String)(Required) Currency Code (USD is default, GBP, EUR)		
+- ``currencyId`` **String** _(Required)_ Currency Code (USD is default, GBP, EUR)
+- ``callback`` **Function** _(Optional)_
 
 ```javascript
-window.plugins.appsFlyer.setCustomeUserId(customeUserId);
+window.plugins.appsFlyer.setCustomeUserId(customeUserId, callback);
 ```
-- customeUserId: (String)(Required) the custome user id you would like to attach to each conversion
+- ``customeUserId`` **String** _(Required)_ the custome user id you would like to attach to each conversion
+- ``callback`` **Function** _(Optional)_
 
 ```javascript
 window.plugins.appsFlyer.getDeviceId(callback);
 ```
-- callback: (Function)(Required)
+- ``callback`` **Function** _(Required)_
+
+```javascript
+window.plugins.appsFlyer.getConversionData(callback);
+```
+- ``callback`` **Function** _(Required)_
