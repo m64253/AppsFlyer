@@ -10,6 +10,14 @@ import com.appsflyer.AppsFlyerLib;
 
 import android.util.Log;
 
+public interface ConversionDataListener {
+
+    void onConversionDataLoaded(Map<String,String> conversionData);
+
+    void onConversionFailure(String errorMessage);
+
+}
+
 public class AppsFlyerPlugin extends CordovaPlugin {
 	
 	@Override
@@ -23,9 +31,19 @@ public class AppsFlyerPlugin extends CordovaPlugin {
 			setCurrencyId(args);
 			return true;
 		}
-		else if("setCustomeUserId".equals(action))
+		else if("setCustomerUserId".equals(action))
 		{
 			setCustomeUserId(args);
+			return true;
+		}
+		else if("getDeviceId".equals(action, callbackContext))
+		{
+			getDeviceId(args);
+			return true;
+		}
+		else if("getConversionData".equals(action, callbackContext))
+		{
+			getConversionData(args);
 			return true;
 		}
 		return false;
@@ -52,23 +70,23 @@ public class AppsFlyerPlugin extends CordovaPlugin {
 	
 	}
 	
-	private void setCustomeUserId(JSONArray parameters)
+	private void setCustomerUserId(JSONArray parameters)
 	{
-		String customeUserId=null;
+		String customerUserId=null;
 		try
 		{
-			customeUserId = parameters.getString(0);
+			customerUserId = parameters.getString(0);
 		}
 		catch (JSONException e) 
 		{
 			e.printStackTrace();
 			return;
 		}
-		if(customeUserId == null || customeUserId.length()==0)
+		if(customerUserId == null || customerUserId.length()==0)
 		{
 			return;
 		}
-		AppsFlyerLib.setAppUserId(customeUserId);
+		AppsFlyerLib.setAppUserId(customerUserId);
 	
 	}
 	
@@ -108,5 +126,38 @@ public class AppsFlyerPlugin extends CordovaPlugin {
 		} else {
 			AppsFlyerLib.sendTracking(this.cordova.getActivity().getApplicationContext(), devKey);
 		}
+	}
+
+
+	private void getDeviceId(JSONArray parameters, CallbackContext callbackContext)
+	{
+		String deviceId = AppsFlyerLib.getAppsFlyerUID(this);
+
+		if (deviceId != null && !deviceId.isEmpty())
+		{
+			callbackContext.success(deviceId);
+		}
+		else
+		{
+			callbackContext.error();
+		}
+	}
+
+	private void getConversionData(JSONArray parameters, CallbackContext callbackContext)
+	{
+		AppsFlyerLib.getConversionData(this, new ConversionDataListener() {
+    		public void onConversionDataLoaded(Map<String, String> conversionData) {
+        	JSONObject r = new JSONObject();
+        	for (String attrName : conversionData.keySet()){
+        		Log.d("AppsFlyerTest","attribute: "+attrName+" = "+conversionData.get(attrName));
+						r.put(attrName, conversionData.get(attrName));
+          }
+          callbackContext.success(r);
+        }
+        public void onConversionFailure(String errorMessage) {
+        	Log.d("AppsFlyerTest", "error getting conversion data: "+errorMessage);
+        	callbackContext.error(errorMessage);
+        }
+		});
 	}
 }
